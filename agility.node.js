@@ -259,17 +259,21 @@ export async function validatePreview({ agilityPreviewKey, slug }) {
 export async function validateSlugForPreview({ slug }) {
 	//Check that the requested page exists, if not return a 401
 
+	console.log("Validate Slug", slug)
+
 	const agilitySyncClient = getSyncClient({
 		apiKey: previewAPIKey,
 		isPreview: true
 	});
+
+	console.log("get sync client", previewAPIKey)
 
 	const sitemapFlat = await agilitySyncClient.store.getSitemap({
 		channelName,
 		languageCode
 	})
 
-	console.log("Validate Slug", slug, sitemapFlat)
+	console.log("Sitemap Flat", sitemapFlat)
 
 	const pageInSitemap = sitemapFlat[slug];
 
