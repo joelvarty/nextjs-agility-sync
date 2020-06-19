@@ -25,7 +25,7 @@ const getSyncClient = ({ isPreview, apiKey }) => {
 		store: {
 			interface: agilityFileSystem,
 			options: {
-				rootPath: `.agility-files/${isPreview ? 'preview' : 'live'}`
+				rootPath: `.next/cache/.agility-files/${isPreview ? 'preview' : 'live'}`
 			}
 		}
 	});
@@ -64,7 +64,6 @@ export async function getAgilityPageProps({ context }) {
 		console.log(`Agility CMS => Syncing ${isPreview ? "Preview" : "Live"} Mode`)
 		await agilitySyncClient.runSync();
 	}
-
 
 
 	console.log(`Agility CMS => Getting page props for '${path}'...`);
