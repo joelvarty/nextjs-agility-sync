@@ -37,6 +37,17 @@ const getSyncClient = ({ isPreview, apiKey }) => {
 
 export async function getAgilityPageProps({ context }) {
 
+
+	let path = '/';
+	if (context.params) {
+		//build path by iterating through slugs
+		path = '';
+		context.params.slug.map(slug => {
+			path += '/' + slug
+		})
+	}
+
+
 	//determine if we are in preview mode
 	let apiKey = fetchAPIKey;
 
@@ -51,15 +62,6 @@ export async function getAgilityPageProps({ context }) {
 		apiKey: apiKey,
 		isPreview: isPreview
 	});
-
-	let path = '/';
-	if (context.params) {
-		//build path by iterating through slugs
-		path = '';
-		context.params.slug.map(slug => {
-			path += '/' + slug
-		})
-	}
 
 
 	//only sync if we are in preview mode
