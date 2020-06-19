@@ -59,9 +59,13 @@ export async function getAgilityPageProps({ context }) {
 	}
 
 
-	console.log(`Agility CMS => Syncing ${isPreview ? "Preview" : "Live"} Mode`)
+	//only sync if we are in preview mode
+	if (isPreview) {
+		console.log(`Agility CMS => Syncing ${isPreview ? "Preview" : "Live"} Mode`)
+		await agilitySyncClient.runSync();
+	}
 
-	await agilitySyncClient.runSync();
+
 
 	console.log(`Agility CMS => Getting page props for '${path}'...`);
 
@@ -175,6 +179,8 @@ const asyncForEach = async (array, callback) => {
 
 
 export async function getAgilityPaths() {
+
+
 	console.log(`Agility CMS => Fetching sitemap for getAgilityPaths...`);
 
 	//determine if we are in preview mode
@@ -189,6 +195,11 @@ export async function getAgilityPaths() {
 		apiKey: apiKey,
 		isPreview: isPreview
 	});
+
+	console.log(`Agility CMS => Syncing ${isPreview ? "Preview" : "Live"} Mode`)
+
+	await agilitySyncClient.runSync();
+
 
 	const sitemapFlat = await agilitySyncClient.store.getSitemap({
 		channelName,
