@@ -1,20 +1,20 @@
 {
-  "name": "agility-next-starter-ssg",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "export": "next export",
-    "deploy": "next build && next export"
-  },
-  "dependencies": {
-    "@agility/content-fetch": "^0.7.1",
-    "@agility/content-sync": "^0.1.8",
-    "isomorphic-unfetch": "^3.0.0",
-    "next": "^9.4.4",
-    "react": "16.12.0",
-    "react-dom": "16.12.0",
-    "truncate-html": "^1.0.3"
-  }
+	"name": "agility-next-starter-ssg-sync",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next",
+		"build": "next build",
+		"export": "next export",
+		"deploy": "next build && next export"
+	},
+	"dependencies": {
+		"@agility/content-fetch": "^0.7.1",
+		"@agility/content-sync": "^0.1.8",
+		"isomorphic-unfetch": "^3.0.0",
+		"next": "^9.4.4",
+		"react": "16.12.0",
+		"react-dom": "16.12.0",
+		"truncate-html": "^1.0.3"
+	}
 }
