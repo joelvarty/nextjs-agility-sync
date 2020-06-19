@@ -259,6 +259,12 @@ export async function validatePreview({ agilityPreviewKey, slug }) {
 export async function validateSlugForPreview({ slug }) {
 	//Check that the requested page exists, if not return a 401
 
+	return {
+		error: false,
+		message: null
+	}
+
+
 
 	console.log("Validate Slug", slug)
 
