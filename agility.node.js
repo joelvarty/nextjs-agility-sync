@@ -25,7 +25,7 @@ const getSyncClient = ({ isPreview, apiKey }) => {
 		store: {
 			interface: agilityFileSystem,
 			options: {
-				rootPath: `node_modules/.agility-files/${isPreview ? 'preview' : 'live'}`
+				rootPath: `node_modules/@agility/content-sync/.cache/${isPreview ? 'preview' : 'live'}`
 			}
 		}
 	});
