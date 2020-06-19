@@ -267,6 +267,9 @@ export async function validateSlugForPreview({ slug }) {
 		isPreview: true
 	});
 
+
+	await agilitySyncClient.runSync();
+
 	console.log("get sync client", previewAPIKey)
 
 	const sitemapFlat = await agilitySyncClient.store.getSitemap({
@@ -275,12 +278,6 @@ export async function validateSlugForPreview({ slug }) {
 	})
 
 	console.log("Sitemap Flat", sitemapFlat)
-
-
-	return {
-		error: false,
-		message: null
-	}
 
 	const pageInSitemap = sitemapFlat[slug];
 
