@@ -147,9 +147,6 @@ export async function getAgilityPageProps({ context }) {
 		})
 
 
-
-
-
 		//store as dictionary
 		page.zones[zoneName] = modules;
 
