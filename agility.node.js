@@ -1,7 +1,5 @@
 import crypto from 'crypto'
-import agilityContentFetch from '@agility/content-fetch'
 import agilityContentSync from '@agility/content-sync'
-
 import agilityFileSystem from "@agility/content-sync/src/store-interface-filesystem"
 
 import agilityConfig from './agility.config'
@@ -17,35 +15,8 @@ const channelName = agilityConfig.channelName;
 const securityKey = agilityConfig.securityKey;
 
 
-export async function getAgilityPageProps({ context }) {
-
-	//determine if we are in preview mode
-	let apiKey = fetchAPIKey;
-
-	const isDevelopmentMode = process.env.NODE_ENV === "development";
-
-	const isPreview = (context.preview || isDevelopmentMode ? true : false);
-
-
-
-	if (isPreview) {
-		apiKey = previewAPIKey
-	}
-
-	let path = '/';
-	if (context.params) {
-		//build path by iterating through slugs
-		path = '';
-		context.params.slug.map(slug => {
-			path += '/' + slug
-		})
-	}
-
-
-
-	console.log(`Agility CMS => Syncing ${isPreview ? "Preview" : "Live"} Mode`)
-
-	const agilitySyncClient = agilityContentSync.getSyncClient({
+const getSyncClient = ({ isPreview, apiKey }) => {
+	return agilityContentSync.getSyncClient({
 		guid: guid,
 		apiKey: apiKey,
 		isPreview: isPreview,
@@ -58,17 +29,42 @@ export async function getAgilityPageProps({ context }) {
 			}
 		}
 	});
+}
+
+
+export async function getAgilityPageProps({ context }) {
+
+	//determine if we are in preview mode
+	let apiKey = fetchAPIKey;
+
+	const isDevelopmentMode = process.env.NODE_ENV === "development";
+	const isPreview = (context.preview || isDevelopmentMode ? true : false);
+
+	if (isPreview) {
+		apiKey = previewAPIKey
+	}
+
+	const agilitySyncClient = getSyncClient({
+		apiKey: apiKey,
+		isPreview: isPreview
+	});
+
+	let path = '/';
+	if (context.params) {
+		//build path by iterating through slugs
+		path = '';
+		context.params.slug.map(slug => {
+			path += '/' + slug
+		})
+	}
+
+
+	console.log(`Agility CMS => Syncing ${isPreview ? "Preview" : "Live"} Mode`)
 
 	await agilitySyncClient.runSync();
 
 	console.log(`Agility CMS => Getting page props for '${path}'...`);
 
-
-	const agility = agilityContentFetch.getApi({
-		guid: guid,
-		apiKey: apiKey,
-		isPreview: isPreview
-	});
 
 	//get sitemap
 	const sitemap = await agilitySyncClient.store.getSitemap({ channelName, languageCode });
@@ -157,7 +153,7 @@ export async function getAgilityPageProps({ context }) {
 	})
 
 	//resolve data for other shared components
-	const globalHeaderProps = await GlobalHeader.getCustomInitialProps({ agility: agility, languageCode: languageCode, channelName: channelName });
+	const globalHeaderProps = await GlobalHeader.getCustomInitialProps({ agility: agilitySyncClient.store, languageCode: languageCode, channelName: channelName });
 
 	//TODO: should reduce this response to only include fields that are used in direct output
 	return {
@@ -189,13 +185,12 @@ export async function getAgilityPaths() {
 		apiKey = previewAPIKey
 	}
 
-	const agility = agilityContentFetch.getApi({
-		guid: guid,
+	const agilitySyncClient = getSyncClient({
 		apiKey: apiKey,
 		isPreview: isPreview
 	});
 
-	const sitemapFlat = await agility.getSitemapFlat({
+	const sitemapFlat = await agilitySyncClient.store.getSitemap({
 		channelName,
 		languageCode
 	})
@@ -250,13 +245,13 @@ export async function validatePreview({ agilityPreviewKey, slug }) {
 
 export async function validateSlugForPreview({ slug }) {
 	//Check that the requested page exists, if not return a 401
-	const agility = agilityContentFetch.getApi({
-		guid: guid,
-		apiKey: previewAPIKey,
+
+	const agilitySyncClient = getSyncClient({
+		apiKey: apiKey,
 		isPreview: true
 	});
 
-	const sitemapFlat = await agility.getSitemapFlat({
+	const sitemapFlat = await agilitySyncClient.store.getSitemapFlat({
 		channelName,
 		languageCode
 	})
