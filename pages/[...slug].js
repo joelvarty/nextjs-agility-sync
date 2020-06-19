@@ -5,28 +5,28 @@ import Layout from '../components/Layout'
 
 
 class AgilityPage extends Component {
-  render() {    
-    handlePreview();
+	render() {
+		handlePreview();
 
-    return (
-      <Layout {...this.props} />
-    )
-  }
+		return (
+			<Layout {...this.props} />
+		)
+	}
 }
 
-export async function getStaticProps (context) {
-  const props = await getAgilityPageProps({ context });
-  return {
-    props: props
-  }
+export async function getStaticProps(context) {
+	const props = await getAgilityPageProps({ context });
+	return {
+		props: props
+	}
 }
 
-export async function getStaticPaths() {  
-  const paths = await getAgilityPaths();
-  return {
-    paths: paths,
-    fallback: true
-  }
+export async function getStaticPaths() {
+	const paths = await getAgilityPaths();
+	return {
+		paths: paths,
+		fallback: true
+	}
 }
 
 export default AgilityPage

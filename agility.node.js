@@ -265,7 +265,7 @@ export async function validateSlugForPreview({ slug }) {
 	//Check that the requested page exists, if not return a 401
 
 	const agilitySyncClient = getSyncClient({
-		apiKey: apiKey,
+		apiKey: previewAPIKey,
 		isPreview: true
 	});
 
