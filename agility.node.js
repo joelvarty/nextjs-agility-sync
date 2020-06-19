@@ -15,14 +15,9 @@ const channelName = agilityConfig.channelName;
 const securityKey = agilityConfig.securityKey;
 
 
-
-
-
 const getSyncClient = ({ isPreview, apiKey }) => {
 
-	//TESTING
-	const path = require('path')
-	console.log("PATH TEST: ", path.resolve(path.join(`node_modules/@agility/content-sync/.cache`, `en-us`)))
+	const cachePath = `node_modules/@agility/content-sync/cache/${isPreview ? 'preview' : 'live'}`
 
 	return agilityContentSync.getSyncClient({
 		guid: guid,
@@ -33,10 +28,10 @@ const getSyncClient = ({ isPreview, apiKey }) => {
 		store: {
 			interface: agilityFileSystem,
 			options: {
-				rootPath: `node_modules/@agility/content-sync/.cache/${isPreview ? 'preview' : 'live'}`
+				rootPath: cachePath
 			}
 		}
-	});
+	})
 }
 
 
@@ -273,6 +268,8 @@ export async function validateSlugForPreview({ slug }) {
 		channelName,
 		languageCode
 	})
+
+	console.log("Validate Slug", slug, sitemapFlat)
 
 	const pageInSitemap = sitemapFlat[slug];
 
