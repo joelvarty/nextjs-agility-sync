@@ -15,7 +15,15 @@ const channelName = agilityConfig.channelName;
 const securityKey = agilityConfig.securityKey;
 
 
+
+
+
 const getSyncClient = ({ isPreview, apiKey }) => {
+
+	//TESTING
+	const path = require('path')
+	console.log("PATH TEST: ", path.resolve(path.join(`node_modules/@agility/content-sync/.cache`, `en-us`)))
+
 	return agilityContentSync.getSyncClient({
 		guid: guid,
 		apiKey: apiKey,
