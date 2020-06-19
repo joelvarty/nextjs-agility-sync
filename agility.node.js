@@ -269,7 +269,7 @@ export async function validateSlugForPreview({ slug }) {
 		isPreview: true
 	});
 
-	const sitemapFlat = await agilitySyncClient.store.getSitemapFlat({
+	const sitemapFlat = await agilitySyncClient.store.getSitemap({
 		channelName,
 		languageCode
 	})
