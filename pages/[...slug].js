@@ -8,6 +8,10 @@ class AgilityPage extends Component {
 	render() {
 		handlePreview();
 
+		if (this.props.error) {
+			return <div>{this.props.error}</div>
+		}
+
 		return (
 			<Layout {...this.props} />
 		)
@@ -15,9 +19,17 @@ class AgilityPage extends Component {
 }
 
 export async function getStaticProps(context) {
-	const props = await getAgilityPageProps({ context });
-	return {
-		props: props
+
+	try {
+
+		const props = await getAgilityPageProps({ context });
+		return {
+			props: props
+		}
+	} catch (e) {
+		return {
+			props: { error: e.message }
+		}
 	}
 }
 
