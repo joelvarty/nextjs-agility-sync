@@ -1,27 +1,28 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
+import { cleanHTML } from "../agility/utils"
 import truncate from 'truncate-html'
 
-class PostsListing extends Component {
-	renderPostExcerpt(html) {
+const PostsListing = (props) => {
+
+	const renderPostExcerpt = (html) => {
 		const excerpt = truncate(html, { stripTags: true, length: 160 });
 		return { __html: excerpt };
 	}
-	renderPosts() {
+	const renderPosts = () => {
 
-
-		if (this.props.customData.posts != null) {
+		if (props.customData.posts != null) {
 			let posts = [];
-			this.props.customData.posts.forEach(item => {
+			props.customData.posts.forEach(item => {
 				posts.push(
 					<div className="post" key={item.contentID}>
 						{item.fields.image &&
 							<img src={item.fields.image.url + '?w=860'} alt={item.fields.image.label} />
 						}
 						<h2>
-							<Link href="[...slug]" as={this.props.customData.dynamicUrls[item.contentID]}><a>{item.fields.title}</a></Link>
+							<Link href="[...slug]" as={props.customData.dynamicUrls[item.contentID]}><a>{item.fields.title}</a></Link>
 						</h2>
-						<p dangerouslySetInnerHTML={this.renderPostExcerpt(item.fields.details)}></p>
+						<p dangerouslySetInnerHTML={renderPostExcerpt(item.fields.details)}></p>
 					</div>
 				)
 			})
@@ -29,20 +30,19 @@ class PostsListing extends Component {
 			return posts;
 		}
 	}
-	render() {
 
-		return (
-			<section className="posts-listing">
-				<div className="container">
-					<h1>{this.props.fields.title}</h1>
-					{this.renderPosts()}
-				</div>
-			</section>
-		);
-	}
+	return (
+		<section className="max-w-screen-xl mx-auto px-4 sm:px-6 py-6">
+			<div className="container">
+				<h1>{props.fields.title}</h1>
+				{renderPosts()}
+			</div>
+		</section>
+	);
+
 }
 
-PostsListing.resolvePostUrls = function (sitemap, posts) {
+const resolvePostUrls = function (sitemap, posts) {
 	let dynamicUrls = {};
 	posts.forEach(post => {
 		Object.keys(sitemap).forEach(path => {
@@ -70,7 +70,7 @@ PostsListing.getCustomInitialProps = async function (props) {
 			languageCode: props.languageCode
 		});
 
-		const dynamicUrls = this.resolvePostUrls(sitemap, contentListResult)
+		const dynamicUrls = resolvePostUrls(sitemap, contentListResult)
 
 		//TODO: should reduce this response to only include fields that are used in direct output
 		return {

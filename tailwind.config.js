@@ -9,8 +9,8 @@ module.exports = {
 		},
 	},
 	purge: [
-		'./src/**/*.js',
-		'./src/**/*.jsx',
+		//TODO: figure out how to get purge to work properly
+		//'./pages/**/*.js'
 	],
 	plugins: [
 		require('@tailwindcss/ui'),

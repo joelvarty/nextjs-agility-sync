@@ -1,22 +1,13 @@
 import React, { Component } from 'react';
+import { renderHTML } from '../agility/utils'
 
+export default (props) => {
 
+	return (
+		<section className="max-w-screen-xl mx-auto px-4 sm:px-6 py-6">
+			<div dangerouslySetInnerHTML={renderHTML(props.fields.textblob)}></div>
 
-class RichTextArea extends Component {
-    componentDidMount() {
+		</section>
+	);
 
-    }
-    setHTML = () => {
-        return {__html: this.props.fields.textblob};
-    }
-    render() {    
-        const setHTML = this.setHTML();
-        return (
-            <section className="container">
-                <div dangerouslySetInnerHTML={setHTML}></div>
-            </section>
-        );
-    }
 }
-
-export default RichTextArea;

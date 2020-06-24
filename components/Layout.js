@@ -21,25 +21,29 @@ export default function Layout(props) {
 	return (
 		<div>
 			<Head>
-				<title>{page.title}</title>
+				<title>{page.title} - Agility CMS Sample Blog</title>
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 				<meta name="description" content={page.seo.metaDescription} />
 				<link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-
 
 			</Head>
 			<div className="App">
 				<PreviewBar isPreview={props.isPreview} />
 				<GlobalHeader {...props} />
 
+				<AgilityPageTemplate {...props} />
+
 				<main>
 					<div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-						<AgilityPageTemplate {...props} />
+
 					</div>
 				</main>
 
 
 			</div>
+
+
+
 		</div>
 	)
 }

@@ -1,43 +1,15 @@
 import crypto from 'crypto'
-import agilityContentSync from '@agility/content-sync'
-import agilityFileSystem from "@agility/content-sync/src/store-interface-filesystem"
 
-import agilityConfig from './agility.config'
-import GlobalHeader from './components/GlobalHeader'
-
+import GlobalHeader from '../components/GlobalHeader'
 
 //Agility API stuff
-const previewAPIKey = agilityConfig.previewAPIKey;
-const fetchAPIKey = agilityConfig.fetchAPIKey;
-const guid = agilityConfig.guid;
-const languageCode = agilityConfig.languageCode;
-const channelName = agilityConfig.channelName;
-const securityKey = agilityConfig.securityKey;
+import { agilityConfig, getSyncClient } from './agility.config'
 
+// const securityKey = agilityConfig.securityKey
 
-const getSyncClient = ({ isPreview, apiKey, isDevelopmentMode }) => {
-
-	let cachePath = `node_modules/@agility/content-sync/cache/${isPreview ? 'preview' : 'live'}`
-	if (!isDevelopmentMode && isPreview) {
-		//we are in a lambda function, need to use /tmp
-		cachePath = "/tmp/agilitycache"
-	}
-
-	return agilityContentSync.getSyncClient({
-		guid: guid,
-		apiKey: apiKey,
-		isPreview: isPreview,
-		languages: [languageCode],
-		channels: [channelName],
-		store: {
-			interface: agilityFileSystem,
-			options: {
-				rootPath: cachePath
-			}
-		}
-	})
-}
-
+const channelName = agilityConfig.channelName
+const languageCode = agilityConfig.languageCode
+const isDevelopmentMode = process.env.NODE_ENV === "development"
 
 export async function getAgilityPageProps({ context }) {
 
@@ -51,26 +23,18 @@ export async function getAgilityPageProps({ context }) {
 		})
 	}
 
-
 	//determine if we are in preview mode
-	let apiKey = fetchAPIKey;
 
-	const isDevelopmentMode = process.env.NODE_ENV === "development";
 	const isPreview = (context.preview || isDevelopmentMode ? true : false);
 
-	if (isPreview) {
-		apiKey = previewAPIKey
-	}
-
 	const agilitySyncClient = getSyncClient({
-		apiKey: apiKey,
 		isPreview: isPreview,
 		isDevelopmentMode
 	});
 
 
-	//only sync if we are in preview mode
-	if (isPreview) {
+	//only sync if we are in preview mode and NOT development mode
+	if (isPreview && !isDevelopmentMode) {
 		console.log(`Agility CMS => Syncing ${isPreview ? "Preview" : "Live"} Mode`)
 		await agilitySyncClient.runSync();
 	}
@@ -125,7 +89,7 @@ export async function getAgilityPageProps({ context }) {
 		await asyncForEach(modulesForThisContentZone, async (moduleItem) => {
 
 			//find the react component to use for the module
-			const ModuleComponentToRender = require('./modules/' + moduleItem.module + '.js').default;
+			const ModuleComponentToRender = require('../modules/' + moduleItem.module + '.js').default;
 
 			if (ModuleComponentToRender) {
 
@@ -193,21 +157,17 @@ export async function getAgilityPaths() {
 	console.log(`Agility CMS => Fetching sitemap for getAgilityPaths...`);
 
 	//determine if we are in preview mode
-	const apiKey = fetchAPIKey;
 	const isPreview = false;
 
-	if (isPreview) {
-		apiKey = previewAPIKey
-	}
-
 	const agilitySyncClient = getSyncClient({
-		apiKey: apiKey,
 		isPreview: isPreview
 	});
 
-	console.log(`Agility CMS => Syncing ${isPreview ? "Preview" : "Live"} Mode`)
 
-	await agilitySyncClient.runSync();
+	if (!isDevelopmentMode) {
+		console.log(`Agility CMS => Syncing ${isPreview ? "Preview" : "Live"} Mode`)
+		await agilitySyncClient.runSync();
+	}
 
 
 	const sitemapFlat = await agilitySyncClient.store.getSitemap({
@@ -271,18 +231,16 @@ export async function validateSlugForPreview({ slug }) {
 	}
 
 
-
+	//TODO: actually validate the slug.
 	console.log("Validate Slug", slug)
 
 	const agilitySyncClient = getSyncClient({
-		apiKey: previewAPIKey,
 		isPreview: true
 	});
 
 
 	await agilitySyncClient.runSync();
 
-	console.log("get sync client", previewAPIKey)
 
 	const sitemapFlat = await agilitySyncClient.store.getSitemap({
 		channelName,
@@ -324,3 +282,5 @@ export function generatePreviewKey() {
 	const previewKey = crypto.createHash('sha512').update(strBuffer).digest('base64');
 	return previewKey;
 }
+
+

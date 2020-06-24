@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import Link from 'next/link';
 
-import Transition from "./transition.js"
+import Transition from "./util/transition.js"
 
 const GlobalHeader = (props) => {
 	const { globalHeaderProps, sitemapNode, page } = props;
@@ -12,175 +12,158 @@ const GlobalHeader = (props) => {
 
 	const renderLinks = (kind) => {
 
-		if (globalHeaderProps.sitemap != null) {
+		if (!globalHeaderProps.sitemap) return null;
 
-			let links = globalHeaderProps.sitemap.map(node => {
 
-				let path = node.path;
+		let links = globalHeaderProps.sitemap.map(node => {
 
-				if (kind === "mobile") {
+			let path = node.path;
 
-					let className = "mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-					if (path.indexOf(sitemapNode.path) === 0) {
-						className = "mt-1 block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700";
-					}
+			if (kind === "mobile") {
 
-					return (
-						<Link key={node.pageID} href={path} >
-							<a className={className}>{node.menuText}</a>
-						</Link>
-					)
-				} else {
+				//MOBILE MENU ITEMS
 
-					let className = "ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-					if (path.indexOf(sitemapNode.path) === 0) {
-						className = "ml-4 block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700";
-					}
+				return (
+					<Link key={node.pageID + '-m'} href={path} as={path}>
+						<a className="-m-3 p-3 flex items-center space-x-3 rounded-md hover:bg-gray-50 transition ease-in-out duration-150">
+							<svg className="flex-shrink-0 h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+							</svg>
+							<div className="text-base leading-6 font-medium text-gray-900">
+								{node.menuText}
+							</div>
+						</a>
+					</Link>
+				)
+			} else {
 
-					return (
-						<Link key={node.pageID} href={path} >
-							<a className={className}>{node.menuText}</a>
-						</Link>
-					)
+				//DESKTOP MENU ITEMS
 
-				}
+				let className = "text-base leading-6 font-medium text-gray-500 hover:text-gray-900 focus:outline-none focus:text-gray-900 transition ease-in-out duration-150"
 
-				// if (node.path !== '/') {
-				// 	links.push(<li key={node.pageID}><Link href="/[...slug]" as={node.path}><a>{node.menuText}</a></Link></li>)
-				// } else {
-				// 	links.push(<li key={node.pageID}><Link href={node.path}><a>{node.menuText}</a></Link></li>)
-				// }
-			})
-			return links;
-		}
+				return (
+					<Link key={node.pageID} href={path} as={path}>
+						<a className={className}>{node.menuText}</a>
+					</Link>
+				)
+
+			}
+
+			// if (node.path !== '/') {
+			// 	links.push(<li key={node.pageID}><Link href="/[...slug]" as={node.path}><a>{node.menuText}</a></Link></li>)
+			// } else {
+			// 	links.push(<li key={node.pageID}><Link href={node.path}><a>{node.menuText}</a></Link></li>)
+			// }
+		})
+		return links;
+
 	}
 
-
 	return (
+		<div className="relative bg-white">
+			<div className="max-w-7xl mx-auto px-4 sm:px-6">
+				<div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
+					<div className="lg:w-0 lg:flex-1">
+						{/* TODO: put your own logo here! */}
+						<Link href="/">
+							<a>
+								<img className="h-8 w-auto sm:h-10" src="/logo-triangle-only.svg" alt="Logo" />
+							</a>
+						</Link>
+					</div>
+					<div className="-mr-2 -my-2 md:hidden">
+						<button onClick={() => setIsMobileMenuExpanded(true)} type="button" className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+							<svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+							</svg>
+						</button>
+					</div>
+					<nav className="hidden md:flex space-x-10">
+						{renderLinks("desktop")}
 
-		<React.Fragment>
-			<nav className="bg-gray-800">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="flex items-center justify-between h-16">
-						<div className="flex items-center">
-							<div className="flex-shrink-0">
-								{/* TODO: put your own logo here! */}
-								<Link href="/"><a><img className="h-8" src="https://origin.agilitycms.com/agility-cms-2019/layout/img/logo.svg" alt="Workflow logo" /></a></Link>
-							</div>
-							<div className="hidden md:block">
-								<div className="ml-10 flex items-baseline">
-									{renderLinks("regular")}
-								</div>
-							</div>
-						</div>
-						<div className="hidden md:block">
-							<div className="ml-4 flex items-center md:ml-6">
-								<button className="p-1 border-2 border-transparent text-gray-400 rounded-full hover:text-white focus:outline-none focus:text-white focus:bg-gray-700" aria-label="Notifications">
-									<svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-									</svg>
-								</button>
 
-								{/* Profile dropdown */}
-								<div className="ml-3 relative">
+
+					</nav>
+					<div className="hidden md:flex items-center justify-end space-x-8 md:flex-1 lg:w-0">
+						<a href="#" className="whitespace-no-wrap text-base leading-6 font-medium text-gray-500 hover:text-gray-900 focus:outline-none focus:text-gray-900">
+							Sign in
+		</a>
+						<span className="inline-flex rounded-md shadow-sm">
+							<a href="#" className="whitespace-no-wrap inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150">
+								Sign up
+		  </a>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			{/* <!--
+	Mobile menu, show/hide based on mobile menu state.
+
+	Entering: "duration-200 ease-out"
+	  From: "opacity-0 scale-95"
+	  To: "opacity-100 scale-100"
+	Leaving: "duration-100 ease-in"
+	  From: "opacity-100 scale-100"
+	  To: "opacity-0 scale-95"
+  --> */}
+			<Transition
+				show={isMobileMenuExpanded}
+				enter="duration-200 ease-out"
+				enterFrom="opacity-0 scale-95"
+				enterTo="opacity-100 scale-100"
+				leave="duration-100 ease-in"
+				leaveFrom="opacity-100 scale-100"
+				leaveTo="opacity-0 scale-95"
+			>
+				<div className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden">
+					<div className="rounded-lg shadow-lg">
+						<div className="rounded-lg shadow-xs bg-white divide-y-2 divide-gray-50">
+							<div className="pt-5 pb-6 px-5 space-y-6">
+								<div className="flex items-center justify-between">
 									<div>
-										<button className="max-w-xs flex items-center text-sm rounded-full text-white focus:outline-none focus:shadow-solid" id="user-menu" aria-label="User menu" aria-haspopup="true">
-											<img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+										<Link href="/">
+											<a onClick={() => setIsMobileMenuExpanded(false)}>
+												<img className="h-8 w-auto" src="/logo-triangle-only.svg" alt="Workflow" />
+											</a>
+										</Link>
+									</div>
+									<div className="-mr-2">
+										<button onClick={() => setIsMobileMenuExpanded(false)} type="button" className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+											<svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+											</svg>
 										</button>
 									</div>
-									{/*
-				Profile dropdown panel, show/hide based on dropdown state.
+								</div>
+								<div>
+									<nav className="grid row-gap-8">
+										{renderLinks("mobile")}
 
-				Entering: "transition ease-out duration-100"
-				  From: "transform opacity-0 scale-95"
-				  To: "transform opacity-100 scale-100"
-				Leaving: "transition ease-in duration-75"
-				  From: "transform opacity-100 scale-100"
-				  To: "transform opacity-0 scale-95"
-			  */}
-									{/* <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
-											<div className="py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
-												<a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile
-				  </a>
-												<a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings
-				  </a>
-												<a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out
-				  </a>
-											</div>
-										</div> */}
+									</nav>
 								</div>
 							</div>
-						</div>
-						<div className="-mr-2 flex md:hidden">
-							{/* Mobile menu button */}
-							<button onClick={() => setIsMobileMenuExpanded(!isMobileMenuExpanded)} className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white">
-
-								<svg className={`${isMobileMenuExpanded ? "hidden" : "block"} h-6 w-6`} stroke="currentColor" fill="none" viewBox="0 0 24 24">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-								</svg>
-
-								<svg className={`${isMobileMenuExpanded ? "block" : "hidden"} h-6 w-6`} stroke="currentColor" fill="none" viewBox="0 0 24 24">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-								</svg>
-							</button>
+							<div className="py-6 px-5 space-y-6">
+								<div className="space-y-6">
+									<span className="w-full flex rounded-md shadow-sm">
+										<a href="#" className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150">
+											Sign up
+										</a>
+									</span>
+									<p className="text-center text-base leading-6 font-medium text-gray-500">
+										Existing customer?&nbsp;
+										<a href="#" className="text-indigo-600 hover:text-indigo-500 transition ease-in-out duration-150">
+											Sign in
+										</a>
+									</p>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-
-				{/*
-					Mobile menu, toggle classes based on menu state.
-
-					Open: "block", closed: "hidden"
-					*/}
-				<Transition
-					show={isMobileMenuExpanded}
-					enter="transition ease-out duration-100"
-					enterFrom="transform opacity-0 scale-95"
-					enterTo="transform opacity-100 scale-100"
-					leave="transition ease-in duration-75"
-					leaveFrom="transform opacity-100 scale-100"
-					leaveTo="transform opacity-0 scale-95"
-				>
-					<div className={`md:hidden`}>
-						{/* <div className={`${isMobileMenuExpanded ? "block" : "hidden"} md:hidden`}> */}
-						<div className="px-2 pt-2 pb-3 sm:px-3">
-							{renderLinks("mobile")}
-
-						</div>
-						{/* <div className="pt-4 pb-3 border-t border-gray-700">
-							<div className="flex items-center px-5">
-								<div className="flex-shrink-0">
-									<img className="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
-								</div>
-								<div className="ml-3">
-									<div className="text-base font-medium leading-none text-white">Tom Cook</div>
-									<div className="mt-1 text-sm font-medium leading-none text-gray-400">tom@example.com</div>
-								</div>
-							</div>
-							<div className="mt-3 px-2">
-								<a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">Your Profile
-								</a>
-								<a href="#" className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">Settings
-								</a>
-								<a href="#" className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">Sign out
-								</a>
-							</div>
-						</div> */}
-					</div>
-				</Transition>
-			</nav>
-
-			<header className="bg-white shadow">
-				<div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-					<h1 className="text-3xl font-bold leading-tight text-gray-900">
-						{globalHeaderItem.fields.siteName}
-					</h1>
-				</div>
-			</header>
-
-		</React.Fragment>
-
-	);
+			</Transition>
+		</div>
+	)
 
 }
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { getAgilityPageProps, getAgilityPaths } from '../agility.node'
-import { handlePreview } from '../agility.browser'
+import { getAgilityPageProps, getAgilityPaths } from '../agility/agility.node'
+import { handlePreview } from '../agility/agility.browser'
 import Layout from '../components/Layout'
 
 class AgilityPage extends Component {
@@ -42,7 +42,7 @@ export async function getStaticPaths() {
 	const paths = await getAgilityPaths();
 	return {
 		paths: paths,
-		fallback: true
+		fallback: false
 	}
 }
 
