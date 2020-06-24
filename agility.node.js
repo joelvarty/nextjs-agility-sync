@@ -15,9 +15,13 @@ const channelName = agilityConfig.channelName;
 const securityKey = agilityConfig.securityKey;
 
 
-const getSyncClient = ({ isPreview, apiKey }) => {
+const getSyncClient = ({ isPreview, apiKey, isDevelopmentMode }) => {
 
-	const cachePath = `node_modules/@agility/content-sync/cache/${isPreview ? 'preview' : 'live'}`
+	let cachePath = `node_modules/@agility/content-sync/cache/${isPreview ? 'preview' : 'live'}`
+	if (!isDevelopmentMode && isPreview) {
+		//we are in a lambda function, need to use /tmp
+		cachePath = "/tmp/agilitycache"
+	}
 
 	return agilityContentSync.getSyncClient({
 		guid: guid,
@@ -60,7 +64,8 @@ export async function getAgilityPageProps({ context }) {
 
 	const agilitySyncClient = getSyncClient({
 		apiKey: apiKey,
-		isPreview: isPreview
+		isPreview: isPreview,
+		isDevelopmentMode
 	});
 
 
