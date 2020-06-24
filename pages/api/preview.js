@@ -1,4 +1,4 @@
-import { validateSlugForPreview } from '../../agility/agility.node'
+import { validateSlugForPreview, validatePreview } from '../../agility/agility.node'
 
 // A simple example for testing it manually from your browser.
 // If this is located at pages/api/preview.js, then
