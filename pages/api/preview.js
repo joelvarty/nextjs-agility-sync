@@ -6,15 +6,15 @@ import { validateSlugForPreview, validatePreview } from '../../agility/agility.n
 export default async (req, res) => {
 
 	//validate our preview key, also validate the requested page to preview exists
-	const validationResp = await validatePreview({
-		agilityPreviewKey: req.query.agilitypreviewkey,
-		slug: req.query.slug
-	});
+	//HACK - let's not worry about this for now...
+	// const validationResp = await validatePreview({
+	// 	agilityPreviewKey: req.query.agilitypreviewkey,
+	// 	slug: req.query.slug
+	// });
 
-	if (validationResp.error) {
-		return res.status(401).end(`${validationResp.message}`)
-	}
-
+	// if (validationResp.error) {
+	// 	return res.status(401).end(`${validationResp.message}`)
+	// }
 
 	//enable preview mode
 	res.setPreviewData({})
