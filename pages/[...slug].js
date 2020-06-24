@@ -3,18 +3,16 @@ import { getAgilityPageProps, getAgilityPaths } from '../agility.node'
 import { handlePreview } from '../agility.browser'
 import Layout from '../components/Layout'
 
-// import fs from "fs"
-// import path from "path"
-
-
 class AgilityPage extends Component {
 	render() {
 		handlePreview();
 
-		if (this.props.error) {
+
+		//this runtime error ONLY hapens in preview mode...
+		if (this.props.previewError) {
 			return <div>
-				<div>Error: {this.props.error}</div>
-				<div>Stack: {this.props.stack}</div>
+				<div>{this.props.previewError}</div>
+				<div>{this.props.previewError}</div>
 			</div>
 		}
 
@@ -35,7 +33,7 @@ export async function getStaticProps(context) {
 	} catch (e) {
 
 		return {
-			props: { error: e.message, stack: e.stack }
+			props: { previewError: e.message, stack: e.stack }
 		}
 	}
 }

@@ -222,7 +222,6 @@ export async function getAgilityPaths() {
 }
 
 
-
 export async function validatePreview({ agilityPreviewKey, slug }) {
 	//Validate the preview key
 	if (!agilityPreviewKey) {
