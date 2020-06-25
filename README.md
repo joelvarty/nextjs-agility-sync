@@ -45,6 +45,16 @@ Login to http://github.com, create a new repo, push
 
 - From the Pages tree in Agility CMS
 
+## A Tour Of the Code
+
+- How NextJS works
+- How Agility CMS works with NextJS
+- Routing
+- Modules + Extra Data
+- Dynamic Pages
+- SEO
+- How Preview Works
+
 ## Do Some Work
 
 - Update the Jumbo Tron

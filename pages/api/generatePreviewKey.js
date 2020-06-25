@@ -1,3 +1,5 @@
+import { generatePreviewKey } from "../../agility/agility.node"
+
 export default async (req, res) => {
 
 	//TODO: Only generate the preview link if you are already in Preview!
