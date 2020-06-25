@@ -4,7 +4,7 @@
 
 Sign up for an [Agility CMS Blog Starter](https://account.agilitycms.com/sign-up?product=agility-free) instance.
 
-1. Clone this repository
+1. Clone this repository (git clone https://github.com/joelvarty/nextjs-agility-sync.git)
 2. Run `npm install`
 3. Modify the `.env.example` and place your own _guid_, _apiKeys_ and _security key_
 
@@ -30,7 +30,11 @@ Check the ./out folder...
 
 ## Push it to a new GitHub Repo
 
-Login to http://github.com, create a new repo, push
+- Login to http://github.com, create a new repo
+- Init repo `git init`
+- Remove the existing remote `git remote rm origin`
+- Add new remote `git remote add origin ...`
+- Push it up
 
 ## Deploy to Vercel
 
