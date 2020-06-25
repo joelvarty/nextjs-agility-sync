@@ -1,54 +1,32 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { renderHTML } from "../agility/utils"
 
-class PostDetails extends Component {
-	renderPostContent(html) {
-		return { __html: html };
-	}
-	renderPost() {
-		let post = null;
+const PostDetails = ({ dynamicPageItem, item }) => {
 
-		if (this.props.customData.post != null) {
+	let post = dynamicPageItem;
 
-			post = (
-				<div className="post">
-					<h1>{this.props.customData.post.fields.title}</h1>
-					{this.props.customData.post.fields.image &&
-						<img src={this.props.customData.post.fields.image.url + '?w=860'} alt={this.props.customData.post.fields.image.label} />
-					}
-					<div className="post-content" dangerouslySetInnerHTML={this.renderPostContent(this.props.customData.post.fields.details)}></div>
-				</div>);
+	return (
+		<section className="max-w-screen-xl mx-auto px-4 sm:px-6 py-6">
 
-		}
-		return post;
-	}
-	render() {
-		return (
-			<section className="max-w-screen-xl mx-auto px-4 sm:px-6 py-6">
-				<div className="container">
-					{this.renderPost()}
-				</div>
-			</section>
-		);
-	}
+			<div className="text-center relative">
+				<h1 className="text-3xl tracking-tight leading-10 font-extrabold text-gray-900 sm:text-5xl sm:leading-none md:text-6xl">
+					{post.fields.title}
+				</h1>
+				<p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto ">
+					Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.
+				</p>
+
+				{post.fields.image &&
+					<img src={post.fields.image.url + '?w=860'} alt={post.fields.image.label} />
+				}
+
+				<div className="mx-20 mt-10 text-left" dangerouslySetInnerHTML={renderHTML(post.fields.details)}></div>
+
+			</div>
+		</section >
+	)
+
 }
 
-PostDetails.getCustomInitialProps = async function (props) {
-	const api = props.agility;
-	let post = null;
-	try {
-
-		post = await api.getContentItem({
-			contentID: props.pageInSitemap.contentID,
-			languageCode: props.languageCode
-		});
-
-	} catch (error) {
-		if (console) console.log(error);
-	}
-
-	return {
-		post: post
-	}
-}
 
 export default PostDetails;

@@ -1,7 +1,8 @@
 import React from 'react';
 
-const PreviewBar = ({ isPreview }) => {
-	if (isPreview) {
+const PreviewBar = ({ isPreview, isDevelopmentMode }) => {
+
+	if (isPreview && !isDevelopmentMode) {
 		return (
 			<div className="agility-preview-bar">
 				<img className="agility-preview-bar__logo" src="https://media.agilitycms.com/preview-bar/2018-11/agility-logo-preview-bar-1.png" alt="Powered by Agility CMS" />

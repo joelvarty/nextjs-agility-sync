@@ -1,12 +1,11 @@
 import crypto from 'crypto'
-
+import { asyncForEach } from "./utils"
 import GlobalHeader from '../components/GlobalHeader'
 
 //Agility API stuff
 import { agilityConfig, getSyncClient } from './agility.config'
 
-// const securityKey = agilityConfig.securityKey
-
+const securityKey = agilityConfig.securityKey
 const channelName = agilityConfig.channelName
 const languageCode = agilityConfig.languageCode
 const isDevelopmentMode = process.env.NODE_ENV === "development"
@@ -48,6 +47,7 @@ export async function getAgilityPageProps({ context }) {
 
 	let pageInSitemap = sitemap[path];
 	let page = null;
+	let dynamicPageItem = null;
 
 
 	if (path === '/') {
@@ -73,6 +73,14 @@ export async function getAgilityPageProps({ context }) {
 		console.error('page [' + path + '] not found in getpage method.')
 	}
 
+
+	//if there is a dynamic page content id on this page, grab it...
+	if (pageInSitemap.contentID > 0) {
+		dynamicPageItem = await agilitySyncClient.store.getContentItem({
+			contentID: pageInSitemap.contentID,
+			languageCode: languageCode
+		});
+	}
 
 	//resolve the page template
 	const pageTemplateName = page.templateName.replace(/[^0-9a-zA-Z]/g, '');
@@ -102,9 +110,10 @@ export async function getAgilityPageProps({ context }) {
 					moduleData = await ModuleComponentToRender.getCustomInitialProps({
 						item: moduleItem.item,
 						agility: agilitySyncClient.store,
-						languageCode: languageCode,
-						channelName: channelName,
-						pageInSitemap: pageInSitemap
+						languageCode,
+						channelName,
+						pageInSitemap,
+						dynamicPageItem
 					});
 				}
 
@@ -116,6 +125,7 @@ export async function getAgilityPageProps({ context }) {
 				modules.push({
 					moduleName: moduleItem.module,
 					item: moduleItem.item,
+
 				})
 
 			} else {
@@ -132,27 +142,23 @@ export async function getAgilityPageProps({ context }) {
 	//resolve data for other shared components
 	const globalHeaderProps = await GlobalHeader.getCustomInitialProps({ agility: agilitySyncClient.store, languageCode: languageCode, channelName: channelName });
 
-	//TODO: should reduce this response to only include fields that are used in direct output
 	return {
 		sitemapNode: pageInSitemap,
-		page: page,
-		pageTemplateName: pageTemplateName,
-		globalHeaderProps: globalHeaderProps,
-		languageCode: languageCode,
-		channelName: channelName,
-		isPreview: (context.preview ? true : false)
+		page,
+		dynamicPageItem,
+		pageTemplateName,
+		globalHeaderProps,
+		languageCode,
+		channelName,
+		isPreview,
+		isDevelopmentMode
 	}
 }
 
-const asyncForEach = async (array, callback) => {
-	for (let index = 0; index < array.length; index++) {
-		await callback(array[index], index, array);
-	}
-}
+
 
 
 export async function getAgilityPaths() {
-
 
 	console.log(`Agility CMS => Fetching sitemap for getAgilityPaths...`);
 
@@ -207,12 +213,12 @@ export async function validatePreview({ agilityPreviewKey, slug }) {
 		}
 	}
 
-	const validateSlugResponse = await validateSlugForPreview({ slug });
-
-	if (validateSlugResponse.error) {
-		//kickout
-		return validateSlugResponse;
-	}
+	//HACK: don't bother checking this right now...
+	//const validateSlugResponse = await validateSlugForPreview({ slug });
+	// if (validateSlugResponse.error) {
+	// 	//kickout
+	// 	return validateSlugResponse;
+	// }
 
 	//return success
 	return {
@@ -222,7 +228,7 @@ export async function validatePreview({ agilityPreviewKey, slug }) {
 
 }
 
-export async function validateSlugForPreview({ slug }) {
+const validateSlugForPreview = async ({ slug }) => {
 	//Check that the requested page exists, if not return a 401
 
 	return {
@@ -230,14 +236,9 @@ export async function validateSlugForPreview({ slug }) {
 		message: null
 	}
 
-
-	//TODO: actually validate the slug.
-	console.log("Validate Slug", slug)
-
 	const agilitySyncClient = getSyncClient({
 		isPreview: true
 	});
-
 
 	await agilitySyncClient.runSync();
 

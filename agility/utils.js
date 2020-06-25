@@ -10,7 +10,14 @@ const cleanHTML = (html) => {
 	return html.replace(/href="~\//gi, 'href="/')
 }
 
+const asyncForEach = async (array, callback) => {
+	for (let index = 0; index < array.length; index++) {
+		await callback(array[index], index, array);
+	}
+}
+
 module.exports = {
 	renderHTML,
-	cleanHTML
+	cleanHTML,
+	asyncForEach
 }

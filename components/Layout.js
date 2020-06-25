@@ -28,7 +28,7 @@ export default function Layout(props) {
 
 			</Head>
 			<div className="App">
-				<PreviewBar isPreview={props.isPreview} />
+				<PreviewBar {...props} />
 				<GlobalHeader {...props} />
 
 				<AgilityPageTemplate {...props} />
