@@ -1,15 +1,27 @@
 # Next.js + Agility CMS Sync + SSG
 
-# Get Started
+## Get Started
 
 Sign up for an [Agility CMS Blog Starter](https://account.agilitycms.com/sign-up?product=agility-free) instance.
 
 1. Clone this repository
 2. Run `npm install`
 3. Run `npm run dev`
-4. Modify the `agility.config.js` and place your own _guid_ and _apiKeys_ (if you want to test this with your own instance - must be using the Blog Template) - you can also run it with the sandbox credentials provided
+4. Modify the `.env.example` and place your own _guid_, _apiKeys_ and _security key_
 
-# Test SSG Local
+### Refresh the Agility CMS Data
+
+```
+npm run cms-pull
+```
+
+### Run it Locally
+
+```
+npm run dev
+```
+
+### Test Static Builds
 
 ```
 npm run deploy
@@ -17,36 +29,25 @@ npm run deploy
 
 Check the ./out folder...
 
-Use a simple http server to test.
+## Push it to a new GitHub Repo
 
-```
-http-server ./out
-```
+Login to http://github.com, create a new repo, push
 
-# Deploy
+## Deploy to Vercel
 
-Create a Vercel Account...
+- Create a Vercel Account (https://vercel.com)
+- Create a new project based on the Git Repo
 
-# Notes
+## Setup Domain Configuration in Agility CMS
 
-## How to Properly Link to a Page
+- Take the link from the new project and add it to Domain Config in Settings
 
-Because we are using _dynamic pages_ along with a catch-all route in Next.js, you'll need to use the following `<Link>` method to properly provide links to other dynamic pages while still having the client-side router pick them up. There is a current [issue](https://github.com/zeit/next.js/issues/8207) (as of v9.21) open for this for Next.js to handle it better, but for now you'll need to do this:
+## Test Live and Preview Mode
 
-```javascript
-import Link from "next/link";
+- From the Pages tree in Agility CMS
 
-//where '[...slug]' is the catch-all dynamic page we have (pages/[...slug].js)
-// and '/posts' is the actual real page path for the page
-<Link href="[...slug]" as="/posts">
-	<a>{item.fields.title}</a>
-</Link>;
-```
+## Do Some Work
 
-## How to Preview Content?
-
-Since this is a static app, how can editors preview content in realtime as they are making them in the CMS? Zeit Now apparantly will support a great way to do this, but until then, you can run this in development mode (`npm run dev`) in a container on a web server. This ensures that the requests for each page are done at runtime.
-
-> Native support for Preview with NextJS/Zeit is now enabled, documentation coming soon.
-
-This repo is set up work with Azure Dev Ops (_azure-pipelines.yml_) and Docker (\_DockerFile). This allows you to use Docker to build an image, and then push it to the Azure Container Registry of your choice. An Azure App Service that you setup would simply use the Registry to enable Continuous Deployment.
+- Update the Jumbo Tron
+- Update the Global Header
+- Look at SEO for Posts
