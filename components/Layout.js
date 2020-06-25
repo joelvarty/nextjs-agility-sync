@@ -21,7 +21,7 @@ export default function Layout(props) {
 	return (
 		<div>
 			<Head>
-				<title>{page.title} - Agility CMS Sample Blog</title>
+				<title>{sitemapNode.title} - Agility CMS Sample Blog</title>
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 				<meta name="description" content={page.seo.metaDescription} />
 				<link rel="stylesheet" href="https://rsms.me/inter/inter.css" />

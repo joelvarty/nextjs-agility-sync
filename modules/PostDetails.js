@@ -4,7 +4,7 @@ import { renderHTML } from "../agility/utils"
 const PostDetails = ({ dynamicPageItem, item }) => {
 
 	let post = dynamicPageItem;
-
+	console.log(post.fields.image)
 	return (
 		<section className="max-w-screen-xl mx-auto px-4 sm:px-6 py-6">
 
@@ -17,7 +17,9 @@ const PostDetails = ({ dynamicPageItem, item }) => {
 				</p>
 
 				{post.fields.image &&
-					<img src={post.fields.image.url + '?w=860'} alt={post.fields.image.label} />
+
+					<img className="mx-auto my-10" src={post.fields.image.url + '?w=860'} alt={post.fields.image.label} />
+
 				}
 
 				<div className="mx-20 mt-10 text-left" dangerouslySetInnerHTML={renderHTML(post.fields.details)}></div>

@@ -8,8 +8,8 @@
 		"export": "next export",
 		"deploy": "next build && next export",
 		"start": "next start",
-		"cms-pull": "NODE_ENV=development node agility.sync.js sync",
-		"cms-clear": "NODE_ENV=development node agility.sync.js clear"
+		"cms-pull": "NODE_ENV=development node agility/agility.sync.js sync",
+		"cms-clear": "NODE_ENV=development node agility/agility.sync.js clear"
 	},
 	"dependencies": {
 		"@agility/content-fetch": "^0.7.1",
