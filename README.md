@@ -34,7 +34,7 @@ Check the ./out folder...
 - Init repo `git init`
 - Remove the existing remote `git remote rm origin`
 - Add new remote `git remote add origin ...`
-- Push it up
+- Push it up to the main branch `git push -u origin main`
 
 ## Deploy to Vercel
 
