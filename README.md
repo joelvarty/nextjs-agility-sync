@@ -6,8 +6,7 @@ Sign up for an [Agility CMS Blog Starter](https://account.agilitycms.com/sign-up
 
 1. Clone this repository
 2. Run `npm install`
-3. Run `npm run dev`
-4. Modify the `.env.example` and place your own _guid_, _apiKeys_ and _security key_
+3. Modify the `.env.example` and place your own _guid_, _apiKeys_ and _security key_
 
 ### Refresh the Agility CMS Data
 
