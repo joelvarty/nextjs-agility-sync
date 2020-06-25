@@ -64,3 +64,7 @@ Check the ./out folder...
 - Update the Jumbo Tron
 - Update the Global Header
 - Look at SEO for Posts
+
+## Check out Tailwind UI
+
+- https://tailwindui.com/
