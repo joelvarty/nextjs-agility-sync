@@ -163,23 +163,30 @@ export async function getAgilityPaths() {
 	console.log(`Agility CMS => Fetching sitemap for getAgilityPaths...`);
 
 	//determine if we are in preview mode
-	const isPreview = false;
+	const isPreview = isDevelopmentMode;
 
 	const agilitySyncClient = getSyncClient({
-		isPreview: isPreview
+		isPreview,
+		isDevelopmentMode
 	});
-
 
 	if (!isDevelopmentMode) {
 		console.log(`Agility CMS => Syncing ${isPreview ? "Preview" : "Live"} Mode`)
 		await agilitySyncClient.runSync();
 	}
 
-
 	const sitemapFlat = await agilitySyncClient.store.getSitemap({
 		channelName,
 		languageCode
 	})
+
+	if (!sitemapFlat) {
+		console.warn("Agility CMS => No Site map found.  Make sure your environment variables are setup correctly.")
+		if (isDevelopmentMode) {
+			console.warn("Agility CMS => Then run: npm run cms-pull")
+		}
+		return []
+	}
 
 	return Object.keys(sitemapFlat).map(s => {
 		//returns an array of paths as a string (i.e.  ['/home', '/posts'] as opposed to [{ params: { slug: 'home'}}]))
