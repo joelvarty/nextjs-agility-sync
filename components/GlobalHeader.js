@@ -163,7 +163,7 @@ const GlobalHeader = (props) => {
 }
 
 GlobalHeader.getCustomInitialProps = async function (props) {
-	//console.log(props);
+
 	const api = props.agility;
 	const languageCode = props.languageCode;
 	const channelName = props.channelName;
